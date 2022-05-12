@@ -2,17 +2,17 @@
 # Relteco BWB
 ## Bare Web Browser
 
-![]()
+![](https://github.com/Relteco/bwb/blob/main/asset/bwbIcon.png)
 
 
 A very simple web browser for usually i3wm,dwm,openbox of window manager users, and developers.
 It was designed mainly for use with a keyboard.
 
 ## Preview 1
-![]()
+![](https://github.com/Relteco/bwb/blob/main/asset/rv0.png)
 
 ## Preview 2
-![]()
+![](https://github.com/Relteco/bwb/blob/main/asset/rv1.png)
 
 
 # All Shortcuts
@@ -73,7 +73,7 @@ It was designed mainly for use with a keyboard.
 #### Download BWB project.
 
  ```
-    $ git clone https://github.com/relteco/bwb.git
+    $ git clone https://github.com/Relteco/bwb.git
 ```
 
 #### Go to project path
@@ -93,6 +93,10 @@ It was designed mainly for use with a keyboard.
  ``` 
    $ npm start
 ```
+
+
+
+----------------------------------------
 
 
 # Relteco Note
@@ -122,6 +126,9 @@ congratulations !!
 
 
 
-## License
+-----------------------------------------------------
+
+
+# License
 
 [MIT](https://github.com/relteco/bwb//LICENSE)
