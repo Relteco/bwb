@@ -1,0 +1,20 @@
+{
+  "name": "bwb",
+  "version": "1.0.0",
+  "description": "bare web browser",
+  "main": "app.js",
+    "scripts": {
+        "start":"electron .",    
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bare",
+    "web",
+    "browser"
+  ],
+  "author": "Relteco Inc.",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^18.2.0"
+  }
+}

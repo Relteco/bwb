@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Relteco Bare Web Browser</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    html,
+    body {
+      background-color: #000;
+      color: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .indicator {
+      width: 100%;
+      height: 4px;
+      background-color: orange;
+      animation-duration: 1s;
+      opacity: 0;
+      animation-name: progress;
+      animation-timing-function: ease;
+      animation-iteration-count: infinite;
+    }
+
+
+    @keyframes progress {
+      from {
+        width: 0;
+        margin-left: 0;
+        margin-right: 100%
+      }
+
+      50% {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0
+      }
+
+      to {
+        width: 0;
+        margin-left: 100%;
+        margin-right: 0
+      }
+    }
+
+
+
+    .menu {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
+      flex-direction: column;
+      left: 0;
+      justify-content: center;
+    }
+
+    .menubtns ul {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 5px;
+      margin: 5px;
+    }
+
+    .menubtns ul li {
+      list-style: none;
+      font-size: 25px;
+      font-family: bold;
+      transition: 0.3s linear;
+      cursor: pointer;
+      padding: 20px
+    }
+
+    .menubtns ul li:hover {
+      background-color: rgba(30, 30, 30, 0.8)
+    }
+
+    .url {
+      padding: 15px;
+      margin: 30px;
+      background-color: rgba(50, 50, 50, 0.8);
+      outline: none;
+      color: #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="menu">
+    <input class="url" type="text" placeholder="url adress" autofocus />
+
+    <div class="menubtns">
+      <ul>
+        <li id="btn_0"> <i class="fa-solid fa-xmark"></i> </li>
+        <li id="btn_1"> <i class="fa-solid fa-angle-left"></i> </li>
+        <li id="btn_2"> <i class="fa-solid fa-angle-right"></i> </li>
+
+        <li id="btn_3"> <i class="fa-solid fa-arrow-rotate-right"></i> </li>
+        <li id="btn_4"> <i class="fa-solid fa-house"></i> </li>
+
+        <li id="btn_5"> <i class="fa-solid fa-magnifying-glass"></i> </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="indicator"></div>
+  <webview nodeintegrationinsubframes style="display:inline-flex;flex:1;width:100%;height:99vh;background-color:#ddd"
+    src="http://www.google.com"></webview>
+</body>
+
+</html>
+
+
+
+<script>
+
+
+  onload = () => {
+
+
+    const { ipcRenderer } = require('electron')
+
+    const webview = document.querySelector('webview')
+    const indicator = document.querySelector('.indicator')
+
+    const loadstart = () => {
+      indicator.style.opacity = 1
+    }
+
+    const loadstop = () => {
+      indicator.style.opacity = 0
+    }
+
+    webview.addEventListener('did-start-loading', loadstart)
+    webview.addEventListener('did-stop-loading', loadstop)
+
+
+    // ** TR **
+    // Electron 'da webview veya input elementlerine odaklanıldığında klavye hiyerarşisini ele geçirir.
+    // Örneğin webview ile açtığınız bir google safyasında arama yapmak için input içine yazı yazmaya başladığınızda
+    // özel menü kısayolları çalışmaz. bunu engellemek için input'ların işlem sırasına göre
+    // aktif ve pasif değerlerinin ayarlanması önemlidir.
+
+
+    // ** EN **
+    // In Electron it takes over the keyboard hierarchy when webview or input elements are focused.
+    // For example, when you start typing in the input to search on a google page you opened with webview,
+    // special menu shortcuts do not work. In order to prevent this,
+    //it is important to set the active and passive values ​​of the inputs according to the processing order.
+
+
+
+
+
+
+
+
+    // ** TR **
+    // Web görünümü her yenilendiğinde otomatik olarak odaklanmalıdır.
+    // bu aynı zamanda başlangıçta BroeserWindow'un webview'e odaklanmaması sorununuda çözer.
+
+    // ** EN **
+    // The webview should autofocus every time it refreshes.
+    // this also solves BroeserWindow's webview focus issue on startup.
+
+    webview.addEventListener('dom-ready', () => {
+
+      if (menu.style.display != "flex") {   // menu açıkken webview odaklanmasnı ve kısayollarını bozar 
+        webview.focus();
+
+      }
+    })
+
+
+
+    const menu = document.querySelector(".menu");
+    const inputUrl = document.querySelector(".url");
+
+    // menu butonları seçilir
+    // Select menu buttons
+
+
+    const allbtn = document.querySelectorAll("li");
+    for (let i = 0; i < allbtn.length; i++) {
+      let btn = allbtn[i];
+      btn.onclick = () => {
+        let btnId = parseInt(btn.id.replace("btn_", ""))
+
+        switch (btnId) {
+          case 0:
+            closeMenu();
+            break;
+          case 1:
+            prevPage();
+            break;
+          case 2:
+            nextPage();
+            break;
+          case 3:
+            reloadPage();
+            break;
+          case 4:
+            homePage();
+            break;
+          case 5:
+            openPage();
+            break;
+          default:
+
+
+        }
+      }
+    }
+
+
+
+    // klavye dinlemesi
+    //listen keyboard
+
+    inputUrl.addEventListener('keyup', (e) => {
+      if (menu.style.display == "flex") {
+        if (e.keyCode == 13 && inputUrl.value.length > 0) {
+          openPage();
+        };
+        if (e.ctrlKey) {
+
+          logKey(parseInt(e.keyCode))
+        }
+      }
+    });
+
+
+
+
+    // ** TR ** 
+    // fonksiyonların çalıştırılması için gerekli kısayollar App.js deki menu kısayollarından alınıyor.
+    // menuden gelen keyCode lar ile case: değerleri aynı tutulmuştur.
+
+
+    // ** EN **
+    // The shortcuts required for running the functions are taken from the menu shortcuts in App.js.
+    // KeyCodes from the menu and case: values ​​are kept the same.
+
+
+    ipcRenderer.on('key', (event, arg) => {
+      let e = parseInt(arg);
+      //console.log(arg)
+      logKey(e)
+    });
+
+    function logKey(e) {
+
+      switch (e) {
+        case 8: //<-
+          closeMenu();
+          break;
+        case 13: //RET
+          openMenu();
+          break;
+        case 75: //K
+          prevPage();
+          break;
+        case 76: //L
+          nextPage();
+          break;
+        case 74: // J
+          helpPage();
+          break;
+        case 72: // H
+          homePage();
+          break;
+        case 82: // R
+          reloadPage();
+          break;
+        default:
+
+
+      }
+
+    }
+
+
+
+    webview.addEventListener('console-message', (e) => {
+      console.log('Guest page logged a message:', e.message)
+    })
+
+
+    //menu fonksiyonları
+    //menu functions
+
+    const openMenu = () => {
+      menu.style.display = "flex"
+      inputUrl.focus();
+
+    }
+    const closeMenu = () => {
+      menu.style.display = "none"
+      webview.focus()
+
+    }
+    const prevPage = () => {
+      webview.goBack();
+    }
+    const nextPage = () => {
+      webview.goForward();
+    }
+    const reloadPage = () => {
+      webview.reload();
+    }
+    const homePage = () => {
+      webview.loadURL("http://google.com")
+    }
+    const helpPage = () => {
+      webview.loadURL("http://github.com")
+    }
+    const openPage = () => {
+
+      webview.loadURL(inputUrl.value)
+      inputUrl.value = ""
+      closeMenu();
+
+    }
+
+
+  }
+
+</script>
