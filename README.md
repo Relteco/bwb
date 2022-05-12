@@ -2,7 +2,7 @@
 # Relteco BWB
 ## Bare Web Browser
 
-![](https://github.com/Relteco/bwb/blob/main/asset/bwbIcon.png)
+![](https://github.com/Relteco/bwb/blob/main/asset/bwbIcon_180x180.png)
 
 
 A very simple web browser for usually i3wm,dwm,openbox of window manager users, and developers.
@@ -131,4 +131,4 @@ congratulations !!
 
 # License
 
-[MIT](https://github.com/relteco/bwb//LICENSE)
+[MIT](https://github.com/Relteco/bwb/blob/main/LICENSE)
