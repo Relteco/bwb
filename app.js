@@ -1,4 +1,4 @@
-const { app, BrowserWindow, protocol, screen, Menu, ipcMain, url, webContents, BrowserView } = require('electron')
+const { app, BrowserWindow, protocol, screen, Menu, ipcMain, url, webContents, BrowserView,nativeTheme } = require('electron')
 
 const path = require('path'),
   fs = require('fs');
@@ -188,8 +188,26 @@ function initApp() {
   })
 
   AppWin.loadFile('index.html')
-}
 
+// koyu tema dinleyici
+// dark theme listener
+
+  ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'system'
+  })
+
+
+
+}
 
 
 

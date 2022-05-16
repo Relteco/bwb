@@ -99,6 +99,14 @@
       border-radius: 5px;
       font-size: 15px;
     }
+
+@media (prefers-color-scheme: dark) {
+  body { background: #333; color: white; }
+}
+
+@media (prefers-color-scheme: light) {
+  body { background: #ddd; color: black; }
+}
   </style>
 
 </head>
@@ -123,8 +131,9 @@
   </div>
 
   <div class="indicator"></div>
-  <webview nodeintegrationinsubframes style="display:inline-flex;flex:1;width:100%;height:99vh;background-color:#ddd"
+  <webview nodeintegrationinsubframes style="display:inline-flex;flex:1;width:100%;height:99vh;"
     src="http://www.google.com"></webview>
+<script src="renderer.js"></script>
 </body>
 
 </html>
